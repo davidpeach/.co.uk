@@ -71,18 +71,31 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-test-couk
-  # namespace: backend
+  name: couk-issuer-staging
 spec:
-  # ACME issuer configuration
-  # `email` - the email address to be associated with the ACME account (make sure it's a valid one)
-  # `server` - the URL used to access the ACME server’s directory endpoint
-  # `privateKeySecretRef` - Kubernetes Secret to store the automatically generated ACME account private key
+  acme:
+    email: mail@davidpeach.co.uk
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: couk-ssl-private-key-staging
+    solvers:
+      # Use the HTTP-01 challenge provider
+      - http01:
+          ingress:
+            class: nginx
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: couk-issuer-production
+spec:
   acme:
     email: mail@davidpeach.co.uk
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-nginx-private-key
+      name: couk-ssl-private-key-production
     solvers:
       # Use the HTTP-01 challenge provider
       - http01:
@@ -95,9 +108,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-couk
-  # namespace: backend
   annotations:
-    cert-manager.io/issuer: letsencrypt-test-couk
+    cert-manager.io/issuer: couk-issuer-production
 spec:
 
   tls:
