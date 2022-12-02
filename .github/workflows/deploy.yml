@@ -45,6 +45,6 @@ jobs:
       run: kubectl apply -f $GITHUB_WORKSPACE/deploy/deployment.yml
 
     - name: Verify deployment
-      run: kubectl rollout status deployment/davidpeachcouk-deployment
+      run: kubectl rollout status deployment/couk-deployment
 
 
