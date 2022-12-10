@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset=utf-8 />
 <title>David Peach</title>
-<link rel=stylesheet href=/style.css />
+@vite('resources/css/sty;e.css')
 <p class=site-title>
     <a href=/>
         David Peach
