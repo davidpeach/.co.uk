@@ -11,5 +11,14 @@ WORKDIR /home/node/app
 
 COPY . .
 
+RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer --version=2.3.5
+
+RUN composer install \
+        --ignore-platform-reqs \
+        --no-interaction \
+        --no-scripts \
+        --prefer-dist \
+        --no-dev
+
 RUN npm install && npm run build
 
