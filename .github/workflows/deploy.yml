@@ -18,6 +18,10 @@ jobs:
     - name: Checkout main
       uses: actions/checkout@v2
 
+    - name: Build Assets 
+      run: |
+        docker build -f docker/assets/Dockerfile -t ${{ secrets.DO_REGISTRY_ENDPOINT }}/couk-assets:$(echo $GITHUB_SHA | head -c7)  .
+
     - name: Build container image
       run: |
         echo ${{ secrets.LARAVEL_ENV_ENCRYPTION_KEY }} > secret.txt
@@ -32,11 +36,17 @@ jobs:
     - name: Log in to DigitalOcean Container Registry with short-lived credentials
       run: doctl registry login --expiry-seconds 600
 
+    - name: Push assets image to DigitalOcean Container Registry
+      run: docker push ${{ secrets.DO_REGISTRY_ENDPOINT }}/couk-assets:$(echo $GITHUB_SHA | head -c7)
+
     - name: Push image to DigitalOcean Container Registry
       run: docker push ${{ secrets.DO_REGISTRY_ENDPOINT }}/couk:$(echo $GITHUB_SHA | head -c7)
 
     - name: Update deployment file
-      run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.DO_REGISTRY_ENDPOINT }}/couk:'${TAG}'|' $GITHUB_WORKSPACE/deploy/deployment.yml
+      run: |
+        TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.DO_REGISTRY_ENDPOINT }}/couk:'${TAG}'|' $GITHUB_WORKSPACE/deploy/deployment.yml
+        TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<ASSETS_IMAGE>|${{ secrets.DO_REGISTRY_ENDPOINT }}/couk-assets:'${TAG}'|' $GITHUB_WORKSPACE/deploy/deployment.yml
+
 
     - name: Save DigitalOcean kubeconfig with short-lived credentials
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 new-hanover

@@ -66,6 +66,19 @@ spec:
             mountPath: /var/www/html
           - name: nginx-mount
             mountPath: /etc/nginx/conf.d
+      initContainers:
+        - name: migrations
+          image: <IMAGE>
+          command: [ bash, -c ]
+          args:
+            - php artisan migrate --force
+        
+        - name: assets
+          image: <ASSETS_IMAGE>
+          command: [ bash, -c ]
+          args:
+            - n
+
 ---
 
 apiVersion: cert-manager.io/v1
