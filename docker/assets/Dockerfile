@@ -6,5 +6,5 @@ WORKDIR /home/node/app
 
 COPY . .
 
-RUN npm run build
+RUN npm install && npm run build
 
