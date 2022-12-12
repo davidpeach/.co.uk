@@ -12,7 +12,7 @@ WORKDIR /home/node/app
 COPY . .
 
 RUN apt-get update \
-    && apt-get install -y git
+    && apt-get install -y git zip
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer --version=2.3.5
 

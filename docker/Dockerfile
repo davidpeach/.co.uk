@@ -5,7 +5,7 @@ FROM php:8.1.12-fpm
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-    && apt-get install -y curl gnupg tzdata wget gnupg git zip \
+    && apt-get install -y curl tzdata wget gnupg git zip \
     && echo "UTC" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
 
@@ -29,3 +29,11 @@ RUN --mount=type=secret,id=LARAVEL_ENV_ENCRYPTION_KEY,dst=/etc/secrets/laravel \
 
 RUN mv .env.production .env
 
+ENV NODE_VERSION=18.12.1
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN npm install && npm run build

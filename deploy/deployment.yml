@@ -72,12 +72,6 @@ spec:
           command: [ bash, -c ]
           args:
             - php artisan migrate --force
-        
-        - name: assets
-          image: <ASSETS_IMAGE>
-          command: [ bash, -c ]
-          args:
-            - n
 
 ---
 
