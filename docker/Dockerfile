@@ -5,7 +5,7 @@ FROM php:8.1.12-fpm
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-    && apt-get install -y curl tzdata wget gnupg git zip mariadb-client \
+    && apt-get install -y curl tzdata wget gnupg git zip mariadb-server \
     && echo "UTC" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
 
