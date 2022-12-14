@@ -7,11 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y curl tzdata wget gnupg git zip mariadb-client \
     && echo "UTC" > /etc/timezone \
-    && dpkg-reconfigure -f noninteractive tzdata
-
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-RUN mkdir /data
+    && dpkg-reconfigure -f noninteractive tzdata \
+    && docker-php-ext-install mysqli pdo pdo_mysql \
+    && mkdir /data
 
 WORKDIR /data
 
@@ -27,9 +25,8 @@ RUN composer install \
         --no-dev
 
 RUN --mount=type=secret,id=LARAVEL_ENV_ENCRYPTION_KEY,dst=/etc/secrets/laravel \
-    php artisan env:decrypt --env=production --key=$(cat /etc/secrets/laravel) --force
-
-RUN mv .env.production .env
+    php artisan env:decrypt --env=production --key=$(cat /etc/secrets/laravel) --force \
+    mv .env.production .env
 
 ENV NODE_VERSION=18.12.1
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
