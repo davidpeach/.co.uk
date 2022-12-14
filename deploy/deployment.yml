@@ -1,7 +1,22 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: davidpeachcouk-production
+  labels:
+    environment: production
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: davidpeachcouk-staging
+  labels:
+    environment: staging
+
+apiVersion: v1
 kind: Service
 metadata:
   name: davidpeachcouk-service
+  namespace: davidpeachcouk-production
 spec:
   selector:
     app: davidpeachcouk
@@ -16,6 +31,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: davidpeachcouk-deployment
+  namespace: davidpeachcouk-production
   labels:
     app: davidpeachcouk
 spec:
@@ -79,6 +95,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: davidpeachcouk-issuer-staging
+  namespace: davidpeachcouk-staging
 spec:
   acme:
     email: mail@davidpeach.co.uk
@@ -97,6 +114,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: davidpeachcouk-issuer-production
+  namespace: davidpeachcouk-production
 spec:
   acme:
     email: mail@davidpeach.co.uk
@@ -115,6 +133,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-davidpeachcouk
+  namespace: davidpeachcouk-production
   annotations:
     cert-manager.io/issuer: davidpeachcouk-issuer-production
 spec:
