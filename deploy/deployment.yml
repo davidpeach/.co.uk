@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: couk-service
+  name: davidpeachcouk-service
 spec:
   selector:
-    app: couk
+    app: davidpeachcouk
   ports:
     - protocol: TCP
       port: 80
@@ -15,14 +15,14 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: couk-deployment
+  name: davidpeachcouk-deployment
   labels:
-    app: couk
+    app: davidpeachcouk
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: couk
+      app: davidpeachcouk
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -31,7 +31,7 @@ spec:
   template:
     metadata:
       labels:
-        app: couk
+        app: davidpeachcouk
     spec:
       volumes:
         - name: shared-files
@@ -39,7 +39,7 @@ spec:
         - name: nginx-mount
           emptyDir: {}
       containers:
-      - name: couk
+      - name: davidpeachcouk
         image: <IMAGE>
         ports:
         - containerPort: 9000
@@ -78,13 +78,13 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: couk-issuer-staging
+  name: davidpeachcouk-issuer-staging
 spec:
   acme:
     email: mail@davidpeach.co.uk
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: couk-ssl-private-key-staging
+      name: davidpeachcouk-ssl-private-key-staging
     solvers:
       # Use the HTTP-01 challenge provider
       - http01:
@@ -96,13 +96,13 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: couk-issuer-production
+  name: davidpeachcouk-issuer-production
 spec:
   acme:
     email: mail@davidpeach.co.uk
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: couk-ssl-private-key-production
+      name: davidpeachcouk-ssl-private-key-production
     solvers:
       # Use the HTTP-01 challenge provider
       - http01:
@@ -114,15 +114,15 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-couk
+  name: ingress-davidpeachcouk
   annotations:
-    cert-manager.io/issuer: couk-issuer-production
+    cert-manager.io/issuer: davidpeachcouk-issuer-production
 spec:
 
   tls:
   - hosts:
     - davidpeach.co.uk
-    secretName: couk-tls
+    secretName: davidpeachcouk-tls
 
   ingressClassName: nginx
 
@@ -134,7 +134,7 @@ spec:
           path: "/"
           backend:
             service:
-              name: couk-service
+              name: davidpeachcouk-service
               port:
                 number: 80
 
