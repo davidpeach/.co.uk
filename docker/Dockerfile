@@ -26,7 +26,8 @@ RUN composer install \
 
 RUN --mount=type=secret,id=LARAVEL_ENV_ENCRYPTION_KEY,dst=/etc/secrets/laravel \
     php artisan env:decrypt --env=production --key=$(cat /etc/secrets/laravel) --force \
-    mv .env.production .env
+
+RUN mv .env.production .env
 
 ENV NODE_VERSION=18.12.1
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
