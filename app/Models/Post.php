@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +26,6 @@ class Post extends Model
 
     public function getPermalinkAttribute(): string
     {
-        return '/posts/' . $this->id; 
+        return '/posts/'.$this->id;
     }
 }
